@@ -8,7 +8,9 @@ env:
 jobs:
   producer:
     runs-on: ubuntu-24.04
-
+    environment: prod
+    env:
+      MY_SECRET: ${{secrets.TEST}}
     outputs:
       test: ${{ steps.generate-test-variable.outputs.test }}
     steps:
@@ -16,7 +18,7 @@ jobs:
         id: generate-test-variable
         shell: bash
         run: |
-          test=$MY_ENV
+          test=$MY_SECRET
 
           echo "test=${test}" >> "$GITHUB_OUTPUT"
           echo "TEST=${test}" >> "$GITHUB_ENV"
@@ -25,14 +27,3 @@ jobs:
         run: |
           echo "TEST (set via GITHUB_ENV):   $TEST"
           echo "test (step output):          ${{steps.generate-test-variable.outputs.test}}"
-
-  consumer:
-    runs-on: ubuntu-24.04
-    needs:
-      - producer
-    steps:
-      - name: Inspect values inside consumer (note FOO is unset)
-        shell: bash
-        run: |
-          echo "Value from producer:        ${{ needs.producer.outputs.test }}"
-          echo "TEST in consumer:            ${TEST:-<UNSET>}"
