@@ -16,7 +16,7 @@ jobs:
         id: generate-test-variable
         shell: bash
         run: |
-          test=MY_ENV
+          test=$MY_ENV
 
           echo "test=${test}" >> "$GITHUB_OUTPUT"
           echo "TEST=${test}" >> "$GITHUB_ENV"
